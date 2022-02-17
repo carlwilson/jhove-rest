@@ -9,17 +9,17 @@ import org.openpreservation.rest.environment.Environment;
 import org.openpreservation.rest.environment.Environments;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.License;
 import io.swagger.annotations.Info;
+import io.swagger.annotations.License;
 import io.swagger.annotations.SwaggerDefinition;
-	
+
 /**
  * @author <a href="mailto:carl@openpreservation.org">Carl Wilson</a>
  *         <a href="https://github.com/carlwilson">carlwilson AT github</a>
  *
  * @version 0.1
  */
-@Path("/")
+@Path("/api")
 @Produces(MediaType.APPLICATION_JSON)
 @Api(value = "jhove")
 @SwaggerDefinition(info=@Info(
@@ -35,7 +35,7 @@ import io.swagger.annotations.SwaggerDefinition;
 public final class ApiResource {
 
 	/**
-	 * 
+	 *
 	 */
 	public ApiResource() {
 		super();

@@ -77,22 +77,64 @@ function renderResult () {
       html: [
         {
           '<>': 'div',
-          class: function (obj, index) { return 'alert ' + ((obj.valid > 0) ? 'alert-success' : 'alert-danger') },
-          text: function (obj, index) { return jhoveResultString(obj.wellFormed, obj.valid) }
+          class: function (obj, index) { return 'card-header align-middle alert ' + ((obj.valid > 0) ? 'alert-success' : (obj.wellFormed > 0 ? 'alert-warning' : 'alert-danger')) },
+          html: [
+            {
+              '<>': 'i',
+              class: function (obj, index) { return (obj.wellFormed < 1) ? 'fas fa-exclamation-circle fa-4x"' : (obj.valid < 1) ? 'fas fa-exclamation-circle fa-4x"' : 'fas fa-info-circle fa-4x"' }
+            }
+          ],
+          text: ' ' + '${message}'
+        },
+        {
+          '<>': 'div',
+          class: 'card-body',
+          html: [
+            {
+              '<>': 'p',
+              class: 'card-title',
+              text: 'File: ' + '${fileName}'
+            },
+            {
+              '<>': 'p',
+              text: 'Format: ' + '${mimeType}' + ' (' + '${format}' + ')'
+            }
+          ]
         }
       ]
     },
     messages: {
       '<>': 'div',
-      class: function (obj, index) { return 'alert ' + (obj.prefix === 'Error' ? 'alert-danger' : 'alert-warning') },
-      text: function (obj, index) { return (index + 1) + ': ' + obj.message }
+      class: 'card',
+      html: [
+        {
+          '<>': 'div',
+          class: function (obj, index) { return 'card-header alert ' + (obj.prefix === 'Error' ? 'alert-danger' : ((obj.prefix === 'Info') ? 'alert-info' : 'alert-warning')) },
+          html: [
+            {
+              '<>': 'i',
+              class: function (obj, index) { return (obj.prefix === 'Error' ? 'fas fa-exclamation-circle fa-2x"' : ((obj.prefix === 'Info') ? 'fas fa-info-circle fa-2x"' : 'fas fa-exclamation-circle fa-2x"')) }
+            },
+            {
+              '<>': 'span',
+              text: function (obj, index) { return (index + 1) + '. ' + obj.jhoveMessage.id }
+            }
+          ]
+        },
+        {
+          '<>': 'div',
+          class: 'card-body',
+          html: [
+            {
+              '<>': 'p',
+              text: '${message}'
+            }
+          ]
+        }
+      ]
     }
   }
   $('#results').json2html(jhoveRest.validator.result, transforms.status)
   $('#results').append($('<h3>').text('Messages'))
   $('#results').json2html(jhoveRest.validator.result.messages, transforms.messages)
-}
-
-function jhoveResultString (wellFormed, valid) {
-  return (wellFormed < 1) ? 'Not well-formed' : (valid < 1) ? 'Well-formed, but not valid.' : 'Well-formed and valid'
 }

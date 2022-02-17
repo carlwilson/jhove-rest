@@ -5,6 +5,8 @@ package org.openpreservation.jhove.modules;
 
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import edu.harvard.hul.ois.jhove.Agent;
 import edu.harvard.hul.ois.jhove.Module;
 
@@ -12,6 +14,7 @@ import edu.harvard.hul.ois.jhove.Module;
  * @author cfw
  *
  */
+@XmlRootElement
 public final class ModuleDetails {
 
 	public final ModuleId moduleId;

@@ -1,6 +1,10 @@
 package org.openpreservation.jhove.rest.server;
 
 import org.glassfish.jersey.server.validation.internal.ValidationExceptionMapper;
+import org.openpreservation.jhove.rest.client.AppResource;
+import org.openpreservation.jhove.rest.client.ModuleResource;
+import org.openpreservation.jhove.rest.client.ModulesResource;
+import org.openpreservation.jhove.rest.client.ValidateResource;
 import org.openpreservation.jhove.rest.exceptions.HttpJhoveExceptionMapper;
 import org.openpreservation.jhove.rest.exceptions.IllegalStateExceptionMapper;
 import org.openpreservation.jhove.rest.resources.ApiResource;
@@ -48,8 +52,12 @@ public class JhoveRestApplication extends Application<JhoveRestConfiguration> {
 	public void initialize(Bootstrap<JhoveRestConfiguration> bootstrap) {
 		bootstrap.addBundle(new MultiPartBundle());
 		// Dropwizard assets bundle to map static resources
-		bootstrap.addBundle(new AssetsBundle("/assets", "/", "index.html", "static")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		bootstrap.addBundle(new ViewBundle<JhoveRestConfiguration>());
+		bootstrap.addBundle(new AssetsBundle("/assets/favicon", "/favicon", null, "favicon")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		bootstrap.addBundle(new AssetsBundle("/assets/css", "/css", null, "css")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		bootstrap.addBundle(new AssetsBundle("/assets/js", "/js", null, "js")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		bootstrap.addBundle(new AssetsBundle("/assets/img", "/img", null, "img")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		bootstrap.addBundle(new AssetsBundle("/assets/browserconfig.xml", "/browserconfig.xml", null, "browserconf")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		bootstrap.addBundle(new AssetsBundle("/assets/favicon.ico", "/favicon.ico", null, "favico")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		bootstrap.addBundle(new ViewBundle<JhoveRestConfiguration>());
 		bootstrap.addBundle(new SwaggerBundle<JhoveRestConfiguration>() {@Override
 		protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(JhoveRestConfiguration configuration) {
@@ -62,7 +70,15 @@ public class JhoveRestApplication extends Application<JhoveRestConfiguration> {
 	public void run(JhoveRestConfiguration configuration, Environment environment) {
 		// Create & register our REST resources
 		final ApiResource restApi = new ApiResource();
+		final AppResource appClient = new AppResource();
+		final ModulesResource modulesClient = new ModulesResource();
+		final ModuleResource moduleClient = new ModuleResource();
+		final ValidateResource validateClient = new ValidateResource();
 		environment.jersey().register(restApi);
+		environment.jersey().register(appClient);
+		environment.jersey().register(modulesClient);
+		environment.jersey().register(moduleClient);
+		environment.jersey().register(validateClient);
 		// Setup exception mapping to integrate JHOVE exceptions with appropriate HTTP
 		// codes
 		final ValidationExceptionMapper vem = new ValidationExceptionMapper();

@@ -29,7 +29,13 @@ function renderModules () {
               {
                 '<>': 'h5',
                 class: 'card-title',
-                text: '${moduleId.name} v${moduleId.release}'
+                html: [
+                  {
+                    '<>': 'a',
+                    href: '/modules/${moduleId.name}',
+                    text: '${moduleId.name} v${moduleId.release}'
+                  }
+                ]
               },
               {
                 '<>': 'p',
@@ -39,7 +45,7 @@ function renderModules () {
               {
                 '<>': 'p',
                 class: 'card-text',
-                text: function (obj, index) { return 'Mime Types: ' + obj.formatDetails.mimeTypes.join(',') }
+                text: function (obj, index) { return 'Mime Types: ' + obj.formatDetails.mimeTypes.join(', ') }
               }
             ]
           }
@@ -48,5 +54,5 @@ function renderModules () {
     ]
   }
 
-  $('ul').json2html(jhoveRest.modules.modules, transform)
+  $('#modules').json2html(jhoveRest.modules.modules, transform)
 }

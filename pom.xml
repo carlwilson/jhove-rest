@@ -53,7 +53,7 @@
     <commons.codec.version>1.11</commons.codec.version>
     <commons.io.version>2.6</commons.io.version>
     <junit.version>4.12</junit.version>
-    <jhove.version>1.24.2</jhove.version>
+    <jhove.version>1.25.0-SNAPSHOT</jhove.version>
   </properties>
 
   <build>
@@ -203,6 +203,12 @@
         <groupId>org.openpreservation.jhove.modules</groupId>
         <artifactId>tiff-hul</artifactId>
         <version>1.9.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.openpreservation.jhove.modules</groupId>
+        <artifactId>tiff-opf</artifactId>
+        <version>0.1.0</version>
       </dependency>
 
       <dependency>

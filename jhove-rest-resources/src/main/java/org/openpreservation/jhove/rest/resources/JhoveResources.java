@@ -12,11 +12,14 @@ import java.nio.file.Path;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParsePosition;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -30,13 +33,20 @@ import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.openpreservation.jhove.ReleaseDetails;
+import org.openpreservation.jhove.module.tiff.TiffProfile;
+import org.openpreservation.jhove.modules.ConformanceReport;
 import org.openpreservation.jhove.modules.ModuleDetails;
+import org.openpreservation.jhove.modules.PolicyCheck;
+import org.openpreservation.jhove.modules.PolicyRule;
+import org.openpreservation.jhove.modules.Property;
 import org.openpreservation.jhove.modules.ValidationReport;
 
 import edu.harvard.hul.ois.jhove.App;
 import edu.harvard.hul.ois.jhove.JhoveBase;
 import edu.harvard.hul.ois.jhove.JhoveException;
 import edu.harvard.hul.ois.jhove.Module;
+import edu.harvard.hul.ois.jhove.Profile;
+import edu.harvard.hul.ois.jhove.ProfiledModule;
 import edu.harvard.hul.ois.jhove.RepInfo;
 
 /**
@@ -121,12 +131,30 @@ public class JhoveResources {
 	@javax.ws.rs.Path("/modules/{module_name}")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public static ModuleDetails module(@PathParam("module_name") String moduleName) {
-		System.err.println("MODULES");
 		Module module = jhoveBase.getModuleMap().get(moduleName.toLowerCase());
 		if (module == null) {
 			throw new NotFoundException("Could not find module with name: " + moduleName);
 		}
 		return ModuleDetails.fromModule(module);
+	}
+
+	/**
+	 * @param uploadedInputStream      InputStream for the uploaded file
+	 * @param contentDispositionHeader extra info about the uploaded file, currently
+	 *                                 unused.
+	 * @return the {@link org.openpreservation.bytestream.ByteStreamId} of the
+	 *         uploaded file's byte stream serialised according to requested content
+	 *         type.
+	 */
+	@GET
+	@javax.ws.rs.Path("/modules/{module_name}/profiles")
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public static Set<String> profiles(@PathParam("module_name") String moduleName) {
+		Module module = jhoveBase.getModuleMap().get(moduleName.toLowerCase());
+		if (module == null) {
+			throw new NotFoundException("Could not find module with name: " + moduleName);
+		}
+		return TiffProfile.getCodes();
 	}
 
 	/**
@@ -170,6 +198,61 @@ public class JhoveResources {
 		return new ValidationReport(repInfo);
 	}
 
+	/**
+	 * @param uploadedInputStream      InputStream for the uploaded file
+	 * @param contentDispositionHeader extra info about the uploaded file, currently
+	 *                                 unused.
+	 * @return the {@link org.openpreservation.bytestream.ByteStreamId} of the
+	 *         uploaded file's byte stream serialised according to requested content
+	 *         type.
+	 * @throws Exception
+	 */
+	@POST
+	@javax.ws.rs.Path("/conformance")
+	@Consumes({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_JSON})
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public static ConformanceReport conformance(@FormDataParam("module") String moduleName,
+			@FormDataParam("file") InputStream uploadedInputStream,
+			@FormDataParam("file") final FormDataContentDisposition contentDispositionHeader,
+			@FormDataParam("profileCodes") List<String> profileCodes,
+			@FormDataParam("policies") List<PolicyRule> policies) {
+		if (!modules.containsKey(moduleName)) {
+			throw new NotFoundException("Could not find module with name: " + moduleName);
+		}
+		MessageDigest sha1 = getDigest();
+		DigestInputStream dis = new DigestInputStream(uploadedInputStream, sha1);
+		Path tempFile;
+		try {
+			tempFile = inputToTempPath(dis);
+		} catch (IOException e) {
+			throw new ProcessingException("Server error serialising file: " + contentDispositionHeader.getFileName(),
+					e);
+		}
+		Module module = jhoveBase.getModule(moduleName);
+		RepInfo repInfo = new RepInfo(contentDispositionHeader.getFileName());
+		repInfo.setSize(contentDispositionHeader.getSize());
+		repInfo.setCreated(contentDispositionHeader.getCreationDate());
+		repInfo.setLastModified(contentDispositionHeader.getModificationDate());
+		final List<Profile> profiles = parseCodes(profileCodes);
+		parsePolicies(policies);
+		try {
+			if (!profiles.isEmpty() && module instanceof ProfiledModule) {
+				if (!jhoveBase.processFile(app, (ProfiledModule)module, false, tempFile.toFile(), repInfo, profiles)) {
+					throw new ProcessingException(
+							"JHOVE Processing aborted for file: " + contentDispositionHeader.getFileName());
+				}
+			} else {
+				if (!jhoveBase.processFile(app, module, false, tempFile.toFile(), repInfo)) {
+					throw new ProcessingException(
+							"JHOVE Processing aborted for file: " + contentDispositionHeader.getFileName());
+				}
+			}
+		} catch (Exception e) {
+			throw new ProcessingException("JHOVE Exception for file: " + contentDispositionHeader.getFileName(), e);
+		}
+		return new ConformanceReport(repInfo, new ArrayList<PolicyCheck>());
+	}
+
 	private static MessageDigest getDigest() {
 		try {
 			return MessageDigest.getInstance(SHA1_NAME);
@@ -191,5 +274,26 @@ public class JhoveResources {
 			}
 		}
 		return temp;
+	}
+
+	private static List<Profile> parseCodes(final List<String> codeParam) {
+		final List<Profile> retVal = new ArrayList<>();
+		String[] codes = {};
+		if (!codeParam.isEmpty()) {
+			codes = codeParam.get(0).split(",");
+		}
+		for (String code : codes) {
+			Profile profile = TiffProfile.byCode(code.replaceAll("\"", ""));
+			if (profile != null) {
+				retVal.add(profile);
+			}
+		}
+		return retVal;
+	}
+	
+	private static void parsePolicies(final List<PolicyRule> rules) {
+		for (PolicyRule rule : rules) {
+			System.err.println(rule);
+		}
 	}
 }

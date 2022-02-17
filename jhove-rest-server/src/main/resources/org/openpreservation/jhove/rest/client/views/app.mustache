@@ -4,20 +4,23 @@
 {{> partials/head}}
 </head>
 <body>
+  {{> partials/navbar}}
   <div class="container">
 
-    <h1>JHOVE REST demonstrator</h1>
     <div class="row">
       <div class="col">
-        <div id="results"></div>
+        <div id="jhove-details"></div>
+      </div>
+    </div><!-- end row -->
+    <div class="row">
+      <div class="col">
+        <div id="env-details"></div>
       </div>
     </div><!-- end row -->
 
   </div><!-- end container -->
 
 {{> partials/footer}}
-  <!-- JHOVE REST resources, JQuery wrappers for REST calls -->
-  <script src="/js/jhove/rest-resources.js"></script>
   <!-- Client glue code to handle page events -->
   <script src="/js/jhove/client-jhove.js"></script>
 </body>

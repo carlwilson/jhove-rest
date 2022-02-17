@@ -5,3 +5,50 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Lato', sans-serif;
 }
+
+button.btn, button.btn-primary, button.btn:disabled, button.btn-primary:disabled, button.btn:focus, button.btn-primary:focus {
+  margin-bottom: 0.75rem;
+  padding: 7px 20px;
+  background-color: #137DA4;
+  border: 2px #137DA4 solid;
+  box-shadow: none !important;
+  transform: none !important;
+  font-family: Lato !important;
+  font-weight: normal !important;
+  border-radius: 50em;
+  text-transform: none;
+  font-size: 1.1em;
+  line-height: normal;
+  letter-spacing: .01em;
+  color: #fff;
+  cursor: pointer;
+  -webkit-appearance: none;
+  transition: all .3s ease-in-out;
+  box-sizing: border-box;
+}
+
+button.btn:hover, button.btn-primary:hover {
+  background-color: #fff;
+  color: #137DA4;
+}
+
+div.card {
+  margin: 0, 0.75rem;
+}
+.card-header, .card-body {
+  padding: 0.75rem;
+  margin: 0;
+}
+
+.card-title, .card-header {
+  font-weight: bold;
+}
+
+.card-title, .card-body p {
+  margin: 0;
+}
+
+.fa-exclamation-circle, .fa-info-circle {
+  font-size: 1.5rem;
+  float: right;
+}

@@ -6,6 +6,8 @@ package org.openpreservation.jhove.modules;
 import java.util.Collections;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import edu.harvard.hul.ois.jhove.Module;
 import edu.harvard.hul.ois.jhove.Signature;
 
@@ -13,6 +15,7 @@ import edu.harvard.hul.ois.jhove.Signature;
  * @author cfw
  *
  */
+@XmlRootElement
 public final class FormatDetails {
 
 	public final String[] formats;

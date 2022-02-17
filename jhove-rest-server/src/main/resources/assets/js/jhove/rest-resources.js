@@ -68,32 +68,35 @@ var jhoveRest = {
   modules: {
     modules: null,
     populate: function (callback, contentType = 'json') {
-      $.ajax({
-        url: '/api/jhove/modules',
-        dataType: contentType,
-        type: 'GET',
-        success: function (data, textStatus, jqXHR) {
-          jhoveRest.modules.modules = data.sort((a, b) => {
-            var aName = a.moduleId.name.toUpperCase()
-            var bName = b.moduleId.name.toUpperCase()
-            if (aName < bName) {
-              return -1
-            }
-            if (aName > bName) {
-              return 1
-            }
-            return 0
-          })
-          console.log(jhoveRest.modules.modules)
-          callback()
-        },
-        // HTTP Error handler
-        error: function (jqXHR, textStatus, errorThrown) {
-          // Log full error to console
-          console.log('JHOVE Error: ' + textStatus + errorThrown)
-          console.log(jqXHR)
-        }
-      })
+      if (jhoveRest.modules.modules === null) {
+        $.ajax({
+          url: '/api/jhove/modules',
+          dataType: contentType,
+          type: 'GET',
+          success: function (data, textStatus, jqXHR) {
+            jhoveRest.modules.modules = data.sort((a, b) => {
+              var aName = a.moduleId.name.toUpperCase()
+              var bName = b.moduleId.name.toUpperCase()
+              if (aName < bName) {
+                return -1
+              }
+              if (aName > bName) {
+                return 1
+              }
+              return 0
+            })
+            callback()
+          },
+          // HTTP Error handler
+          error: function (jqXHR, textStatus, errorThrown) {
+            // Log full error to console
+            console.log('JHOVE Error: ' + textStatus + errorThrown)
+            console.log(jqXHR)
+          }
+        })
+      } else {
+        callback()
+      }
     }
   },
   errHandler: function (jqXHR, textStatus, errorThrown) {

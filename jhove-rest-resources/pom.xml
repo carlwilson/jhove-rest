@@ -87,6 +87,11 @@
 
     <dependency>
       <groupId>org.openpreservation.jhove.modules</groupId>
+      <artifactId>tiff-opf</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openpreservation.jhove.modules</groupId>
       <artifactId>utf8-hul</artifactId>
     </dependency>
 

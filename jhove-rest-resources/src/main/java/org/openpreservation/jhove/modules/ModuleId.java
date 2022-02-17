@@ -5,12 +5,15 @@ package org.openpreservation.jhove.modules;
 
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import edu.harvard.hul.ois.jhove.Module;
 
 /**
  * @author cfw
  *
  */
+@XmlRootElement
 public class ModuleId {
 
 	public final String name;
