@@ -1,7 +1,7 @@
 package org.openpreservation.jhove.rest.server;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 import io.dropwizard.Configuration;
 
 /**
@@ -14,6 +14,9 @@ import io.dropwizard.Configuration;
 public class JhoveRestConfiguration extends Configuration {
 
 	private int port;
+
+	@JsonProperty("swagger")
+	public SwaggerBundleConfiguration swaggerBundleConfiguration;
 
 	/**
 	 * Default no-arg constructor

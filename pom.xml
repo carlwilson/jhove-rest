@@ -51,9 +51,9 @@
     <mvn.versions.version>2.5</mvn.versions.version>
     <mvn.mycilla.license.version>3.0</mvn.mycilla.license.version>
     <commons.codec.version>1.11</commons.codec.version>
-    <commons.io.version>2.6</commons.io.version>
-    <junit.version>4.12</junit.version>
-    <jhove.version>1.22.1</jhove.version>
+    <commons.io.version>2.7</commons.io.version>
+    <junit.version>4.13.1</junit.version>
+    <jhove.version>1.24.2</jhove.version>
   </properties>
 
   <build>

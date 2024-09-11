@@ -31,7 +31,6 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.openpreservation.jhove.ReleaseDetails;
 import org.openpreservation.jhove.modules.ModuleDetails;
-import org.openpreservation.jhove.modules.ModuleId;
 import org.openpreservation.jhove.modules.ValidationReport;
 
 import edu.harvard.hul.ois.jhove.App;
@@ -122,7 +121,8 @@ public class JhoveResources {
 	@javax.ws.rs.Path("/modules/{module_name}")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public static ModuleDetails module(@PathParam("module_name") String moduleName) {
-		Module module = jhoveBase.getModuleMap().get(moduleName);
+		System.err.println("MODULES");
+		Module module = jhoveBase.getModuleMap().get(moduleName.toLowerCase());
 		if (module == null) {
 			throw new NotFoundException("Could not find module with name: " + moduleName);
 		}

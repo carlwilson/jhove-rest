@@ -1,2 +1,6 @@
+swagger:
+  resourcePackage: org.openpreservation.jhove.rest.resources
+logging:
+  level: DEBUG
 server:
   rootPath: /api/

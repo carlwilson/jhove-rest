@@ -27,7 +27,6 @@ public final class ValidateResource {
 
 	@GET
 	public static ValidateView validate() {
-		System.err.println("VALIDATE");
 		return new ValidateView();
 	}
 }
