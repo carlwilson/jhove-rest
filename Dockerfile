@@ -1,4 +1,9 @@
 FROM maven:3.9-eclipse-temurin-11-alpine AS dev-builder
+RUN apk add --no-cache git
+
+WORKDIR /jhove
+RUN git clone -b feat/pdf-2-support https://github.com/openpreserve/jhove.git && cd jhove && mvn clean install
+
 WORKDIR /build
 
 # Copy the current dev source branch to a local build dir
