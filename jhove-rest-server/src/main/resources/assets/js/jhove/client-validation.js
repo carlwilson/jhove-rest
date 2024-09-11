@@ -60,8 +60,8 @@ function calcFileSha1 (file) {
 function renderModules () {
   var transform = {
     '<>': 'option',
-    value: '${name}',
-    text: '${name}'
+    value: '${moduleId.name}',
+    text: '${moduleId.name}'
   }
   $('select').json2html(jhoveRest.modules.modules, transform)
 }

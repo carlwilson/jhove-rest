@@ -61,12 +61,7 @@ var jhoveRest = {
           callback()
         },
         // HTTP Error handler
-        error: function (jqXHR, textStatus, errorThrown) {
-          // Log full error to console
-          console.log('Validation Error: ' + textStatus + errorThrown)
-          console.log(jqXHR)
-          // Alert the user with details
-        }
+        error       : 'jhoveRest.errHandler'
       })
     }
   },
@@ -78,10 +73,9 @@ var jhoveRest = {
         dataType: contentType,
         type: 'GET',
         success: function (data, textStatus, jqXHR) {
-          console.log(jqXHR)
           jhoveRest.modules.modules = data.sort((a, b) => {
-            var aName = a.name.toUpperCase()
-            var bName = b.name.toUpperCase()
+            var aName = a.moduleId.name.toUpperCase()
+            var bName = b.moduleId.name.toUpperCase()
             if (aName < bName) {
               return -1
             }
@@ -90,6 +84,7 @@ var jhoveRest = {
             }
             return 0
           })
+          console.log(jhoveRest.modules.modules)
           callback()
         },
         // HTTP Error handler

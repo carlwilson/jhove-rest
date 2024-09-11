@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+{{> partials/head}}
+</head>
+<body>
+  <div class="container">
+
+    <h1>{{module.moduleId.name}} Module</h1>
+    <div class="row">
+      <div class="col">
+        <h2>v{{module.moduleId.release}}</h2>
+        <p>{{module.moduleId.date}}</p>
+        <h2>Format Details</h2>
+        <h3>Names</h3>
+        <ul>
+        {{#module.formatDetails.formats}}
+          <li>{{.}}</li>
+        {{/module.formatDetails.formats}}
+        </ul>
+        <h3>MIME Types</h3>
+        <ul>
+        {{#module.formatDetails.mimeTypes}}
+          <li>{{.}}</li>
+        {{/module.formatDetails.mimeTypes}}
+        </ul>
+      </div>
+    </div><!-- end row -->
+
+  </div><!-- end container -->
+
+{{> partials/footer}}
+  <!-- JHOVE REST resources, JQuery wrappers for REST calls -->
+  <script src="/js/jhove/rest-resources.js"></script>
+</body>
+</html>

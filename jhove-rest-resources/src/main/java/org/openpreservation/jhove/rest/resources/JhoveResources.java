@@ -31,7 +31,6 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.openpreservation.jhove.ReleaseDetails;
 import org.openpreservation.jhove.modules.ModuleDetails;
-import org.openpreservation.jhove.modules.ModuleId;
 import org.openpreservation.jhove.modules.ValidationReport;
 
 import edu.harvard.hul.ois.jhove.App;
@@ -61,16 +60,16 @@ public class JhoveResources {
 		}
 	}
 
-	private static final Map<String, ModuleId> getModuleDetails(List<Module> modules) {
-		Map<String, ModuleId> retVal = new HashMap<>();
+	private static final Map<String, ModuleDetails> getModuleDetails(List<Module> modules) {
+		Map<String, ModuleDetails> retVal = new HashMap<>();
 		for (Module module : modules) {
-			retVal.put(module.getName(), ModuleId.fromModule(module));
+			retVal.put(module.getName(), ModuleDetails.fromModule(module));
 		}
 		return Collections.unmodifiableMap(retVal);
 	}
 
 	private static final JhoveBase jhoveBase = initBase();
-	private static final Map<String, ModuleId> moduleIds = getModuleDetails(jhoveBase.getModuleList());
+	private static final Map<String, ModuleDetails> modules = getModuleDetails(jhoveBase.getModuleList());
 	private static final App app = App.newAppWithName("JHOVE");
 
 	/**
@@ -106,8 +105,8 @@ public class JhoveResources {
 	@GET
 	@javax.ws.rs.Path("/modules")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public static Collection<ModuleId> modules() {
-		return moduleIds.values();
+	public static Collection<ModuleDetails> modules() {
+		return modules.values();
 	}
 
 	/**
@@ -122,7 +121,8 @@ public class JhoveResources {
 	@javax.ws.rs.Path("/modules/{module_name}")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public static ModuleDetails module(@PathParam("module_name") String moduleName) {
-		Module module = jhoveBase.getModuleMap().get(moduleName);
+		System.err.println("MODULES");
+		Module module = jhoveBase.getModuleMap().get(moduleName.toLowerCase());
 		if (module == null) {
 			throw new NotFoundException("Could not find module with name: " + moduleName);
 		}
@@ -145,7 +145,7 @@ public class JhoveResources {
 	public static ValidationReport validate(@FormDataParam("module") String moduleName,
 			@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") final FormDataContentDisposition contentDispositionHeader) {
-		if (!moduleIds.containsKey(moduleName)) {
+		if (!modules.containsKey(moduleName)) {
 			throw new NotFoundException("Could not find module with name: " + moduleName);
 		}
 		MessageDigest sha1 = getDigest();
