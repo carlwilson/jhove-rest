@@ -1,4 +1,4 @@
-FROM maven:3.9-eclipse-temurin-17-focal AS dev-builder
+FROM maven:3.9-eclipse-temurin-11-alpine AS dev-builder
 WORKDIR /build
 
 # Copy the current dev source branch to a local build dir
