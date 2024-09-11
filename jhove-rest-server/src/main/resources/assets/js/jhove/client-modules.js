@@ -29,17 +29,17 @@ function renderModules () {
               {
                 '<>': 'h5',
                 class: 'card-title',
-                text: 'Module ${name}'
+                text: '${moduleId.name} v${moduleId.release}'
               },
               {
                 '<>': 'p',
                 class: 'card-text',
-                text: 'v${release}'
+                text: function (obj, index) { var date = new Date(obj.moduleId.date); return 'Built: ' + date.toLocaleDateString('en-GB') }
               },
               {
                 '<>': 'p',
                 class: 'card-text',
-                text: function (obj, index) { var date = new Date(obj.date); return 'Built ' + date.toUTCString() }
+                text: function (obj, index) { return 'Mime Types: ' + obj.formatDetails.mimeTypes.join(',') }
               }
             ]
           }

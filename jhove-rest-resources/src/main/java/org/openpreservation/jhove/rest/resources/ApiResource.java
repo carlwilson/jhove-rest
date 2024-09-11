@@ -7,16 +7,15 @@ import javax.ws.rs.core.MediaType;
 
 import org.openpreservation.rest.environment.Environment;
 import org.openpreservation.rest.environment.Environments;
+
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.License;
 import io.swagger.annotations.Info;
 import io.swagger.annotations.SwaggerDefinition;
 	
 /**
- * @author  <a href="mailto:carl@openpreservation.org">Carl Wilson</a>
- *          <a href="https://github.com/carlwilson">carlwilson AT github</a>
+ * @author <a href="mailto:carl@openpreservation.org">Carl Wilson</a>
+ *         <a href="https://github.com/carlwilson">carlwilson AT github</a>
  *
  * @version 0.1
  */
@@ -42,26 +41,26 @@ public final class ApiResource {
 		super();
 	}
 
-    @GET
-    @Path("/info")
-    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    public static Environment getEnvironent() {
-        return Environments.getEnvironment();
-    }
+	@GET
+	@Path("/info")
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public static Environment getEnvironent() {
+		return Environments.getEnvironment();
+	}
 
-    /**
-     * @return a new {@link ByteStreamResource}
-     */
-    @Path("/bytes/")
-    public static ByteStreamResource byteResources() {
-        return new ByteStreamResource();
-    }
+	/**
+	 * @return a new {@link ByteStreamResource}
+	 */
+	@Path("/bytes/")
+	public static ByteStreamResource byteResources() {
+		return new ByteStreamResource();
+	}
 
-    /**
-     * @return a new {@link ByteStreamResource}
-     */
-    @Path("/jhove/")
-    public static JhoveResources jhoveResources() {
-        return new JhoveResources();
-    }
+	/**
+	 * @return a new {@link ByteStreamResource}
+	 */
+	@Path("/jhove/")
+	public static JhoveResources jhoveResources() {
+		return new JhoveResources();
+	}
 }

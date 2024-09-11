@@ -50,6 +50,7 @@ public class JhoveRestApplication extends Application<JhoveRestConfiguration> {
 		// Dropwizard assets bundle to map static resources
 		bootstrap.addBundle(new AssetsBundle("/assets", "/", "index.html", "static")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		bootstrap.addBundle(new ViewBundle<JhoveRestConfiguration>());
+		bootstrap.addBundle(new ViewBundle<JhoveRestConfiguration>());
 		bootstrap.addBundle(new SwaggerBundle<JhoveRestConfiguration>() {@Override
 		protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(JhoveRestConfiguration configuration) {
 			return configuration.swaggerBundleConfiguration;
@@ -71,5 +72,4 @@ public class JhoveRestApplication extends Application<JhoveRestConfiguration> {
 		// Set up cross domain REST
 		environment.jersey().register(CORSResponseFilter.class);
 	}
-
 }
